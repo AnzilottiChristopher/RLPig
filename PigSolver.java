@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class PigSolver {
     int goal;
     double epsilon;
@@ -67,8 +71,8 @@ public class PigSolver {
     }
 
     public void outputHoldValues() {
-        for (int i = 0; i < goal; i += 10) {
-            for (int j = 0; j < goal; j += 10) {
+        for (int i = 0; i < goal; i += 1) {
+            for (int j = 0; j < goal; j += 1) {
                 int k = 0;
                 while (k < goal - i && roll[i][j][k]) {
                     k++;
@@ -79,7 +83,30 @@ public class PigSolver {
         }
     }
 
+    // this function was to convert the output into csv that could be loaded into excel and turned into a heatmap pivot table
+    public void outputHoldValuesToCSV() {
+    String filePath = "hold_values.csv";
+    
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write("Your Score, Opponent Score, Amount to Hold After\n");
+        
+        for (int i = 0; i < goal; i++) {
+            for (int j = 0; j < goal; j++) {
+                int k = 0;
+                while (k < goal - i && roll[i][j][k]) {
+                    k++;
+                }
+                writer.write(i + "," + j + "," + k + "\n");
+            }
+        }
+        
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
     public static void main(String[] args) {
         new PigSolver(100, 1e-9).outputHoldValues();
+        // new PigSolver(100, 1e-9).outputHoldValuesToCSV();
     }
 }
